@@ -237,3 +237,78 @@ Check the file [release-notes.md](./release-notes.md).
 ## License
 
 The Full Stack FastAPI Template is licensed under the terms of the MIT license.
+
+
+
+## CRUD
+    ## Instalación
+
+1. Clona el repositorio  
+   ```bash
+   git clone https://github.com/tu-usuario/tu-crud.git
+   cd tu-crud
+Instala dependencias
+
+bash
+Copiar
+Editar
+npm install    # o yarn install
+Levanta el servicio
+
+bash
+Copiar
+Editar
+npm start      # corre en http://localhost:3000
+curl http://localhost:3000/inventory/items
+``` :contentReference[oaicite:1]{index=1}
+
+## Obtener uno (Read one)
+
+```bash
+curl http://localhost:3000/inventory/items/{id}
+``` :contentReference[oaicite:2]{index=2}
+## Actualizar (Update)
+
+```bash
+curl -X PUT http://localhost:3000/inventory/items/{id} \
+  -H "Content-Type: application/json" \
+  -d '{"quantity":150}'
+
+---
+
+## Fragmento de código: definición de ruta en Express
+
+```javascript
+// src/routes/inventory.js
+const express = require('express');
+const router = express.Router();
+const { getItems, getItem, createItem, updateItem, deleteItem } = require('../controllers/inventory');
+
+// Read all
+router.get('/items', getItems);
+
+// Read one
+router.get('/items/:id', getItem);
+
+// Create
+router.post('/items', createItem);
+
+// Update
+router.put('/items/:id', updateItem);
+
+// Delete
+router.delete('/items/:id', deleteItem);
+
+module.exports = router;
+``` :contentReference[oaicite:3]{index=3}
+
+---
+
+## Tests
+
+Suponiendo que uses Jest:
+
+```bash
+# Ejecuta todos los tests
+npm test
+
