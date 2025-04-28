@@ -16,10 +16,7 @@ jobs:
         with:
           node-version: '16'            # o la versión que uses
 
-      # 2) Instala deps de backend
-      - name: Install backend dependencies
-        working-directory: backend
-        run: npm install
+    
 
       # 3) Instala deps de frontend
       - name: Install frontend dependencies
