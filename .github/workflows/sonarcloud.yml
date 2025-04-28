@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 jobs:
   sonar:
@@ -14,9 +15,12 @@ jobs:
       # 1) Prepara Node.js
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'            # o la versión que uses
+          node-version: '16'  # o la versión que uses
 
-    
+      # 2) Instala deps de backend si es necesario
+      # Si tienes backend, instala sus dependencias. Aquí un ejemplo:
+      # - name: Install backend dependencies
+      #   run: npm install --prefix backend
 
       # 3) Instala deps de frontend
       - name: Install frontend dependencies
@@ -27,7 +31,8 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v3
         with:
-          organization: deviscoutb
-          projectKey: AutomativeCompany
+          args: >
+            -Dsonar.organization=deviscoutb
+            -Dsonar.projectKey=AutomativeCompany
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
