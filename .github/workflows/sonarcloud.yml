@@ -11,9 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install      # o el comando que uses
+      # 1) Prepara Node.js
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'            # o la versión que uses
 
+      # 2) Instala deps de backend
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+
+      # 3) Instala deps de frontend
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm install
+
+      # 4) Lanza el análisis de SonarCloud
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v3
         with:
