@@ -1,0 +1,44 @@
+## Microservice  search
+
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
+import 'search_service.dart';
+
+class MockVehicleRepository extends Mock implements VehicleRepository {}
+
+void main() {
+  group('SearchService', () {
+    late MockVehicleRepository mockRepository;
+    late SearchService searchService;
+
+    setUp(() {
+      mockRepository = MockVehicleRepository();
+      searchService = SearchService(mockRepository);
+    });
+
+    test('should return a list of vehicles when search is successful', () async {
+      // Arrange
+      when(mockRepository.search('Toyota', 'Corolla', 2020))
+          .thenAnswer((_) async => [Vehicle('Toyota', 'Corolla', 2020)]);
+
+      // Act
+      final result = await searchService.search('Toyota', 'Corolla', 2020);
+
+      // Assert
+      expect(result, isA<List<Vehicle>>());
+      expect(result.length, 1);
+      expect(result[0].brand, 'Toyota');
+    });
+
+    test('should throw an exception when search fails', () async {
+      // Arrange
+      when(mockRepository.search('Toyota', 'Corolla', 2020))
+          .thenThrow(Exception('Search failed'));
+
+      // Act & Assert
+      expect(() => searchService.search('Toyota', 'Corolla', 2020),
+          throwsA(isA<Exception>()));
+    });
+  });
+}
+
