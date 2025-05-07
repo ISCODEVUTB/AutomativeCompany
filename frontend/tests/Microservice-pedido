@@ -1,0 +1,40 @@
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
+import 'order_service.dart';
+
+class MockOrderRepository extends Mock implements OrderRepository {}
+
+void main() {
+  group('OrderService', () {
+    late MockOrderRepository mockRepository;
+    late OrderService orderService;
+
+    setUp(() {
+      mockRepository = MockOrderRepository();
+      orderService = OrderService(mockRepository);
+    });
+
+    test('should place an order successfully', () async {
+      // Arrange
+      final order = Order(12345, 67890, 1);
+      when(mockRepository.placeOrder(order)).thenAnswer((_) async => order);
+
+      // Act
+      final result = await orderService.placeOrder(order);
+
+      // Assert
+      expect(result, isA<Order>());
+      expect(result.id, 12345);
+    });
+
+    test('should throw an exception when placing an order fails', () async {
+      // Arrange
+      final order = Order(12345, 67890, 1);
+      when(mockRepository.placeOrder(order))
+          .thenThrow(Exception('Order placement failed'));
+
+      // Act & Assert
+      expect(() => orderService.placeOrder(order), throwsA(isA<Exception>()));
+    });
+  });
+}
