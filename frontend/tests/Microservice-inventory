@@ -1,0 +1,37 @@
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
+import 'inventory_service.dart';
+
+class MockInventoryRepository extends Mock implements InventoryRepository {}
+
+void main() {
+  group('InventoryService', () {
+    late MockInventoryRepository mockRepository;
+    late InventoryService inventoryService;
+
+    setUp(() {
+      mockRepository = MockInventoryRepository();
+      inventoryService = InventoryService(mockRepository);
+    });
+
+    test('should return available quantity when stock is sufficient', () async {
+      // Arrange
+      when(mockRepository.getAvailableQuantity(12345)).thenReturn(10);
+
+      // Act
+      final result = await inventoryService.getAvailableQuantity(12345);
+
+      // Assert
+      expect(result, 10);
+    });
+
+    test('should throw an exception when stock is insufficient', () async {
+      // Arrange
+      when(mockRepository.getAvailableQuantity(12345)).thenReturn(0);
+
+      // Act & Assert
+      expect(() => inventoryService.getAvailableQuantity(12345),
+          throwsA(isA<Exception>()));
+    });
+  });
+}
